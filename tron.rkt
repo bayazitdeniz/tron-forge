@@ -23,10 +23,10 @@ one sig Board {
 
 pred initSmallRoom {
     // NOTE: walls all around the board => handled in transition?
-    no walls 
+    no walls
 
     P1.row = I1
-    P1.col = I1 
+    P1.col = I1
 
     P2.row = I7
     P2.col = I7
@@ -34,21 +34,27 @@ pred initSmallRoom {
     indexConnect
 }
 
-pred moveUp[player : Player] {
-    // preconditions
-    let nextRow = next.(player.row) | {
-        // something above
-        some nextRow
-        // no wall above
-        not (nextRow->(player.col) in Board.walls)
+pred moveTo[player: Player, nextRow: Idx, nextCol: Idx] {
+    // something above
+    some nextRow
+    some nextCol
+    // no wall above
+    not (nextRow->nextCol in Board.walls)
 
-        // postconditions
-        // curr loc will be in walls
-        Board.(walls') = Board.walls + (player.row->player.col)
-        // rowIdx change same column
-        player.(row') = nextRow
-        player.(col') = player.col
-    }
+    // postconditions
+    // curr loc will be in walls
+    Board.(walls') = Board.walls + (player.row->player.col)
+    // rowIdx change same column
+    player.(row') = nextRow
+    player.(col') = nextCol
+}
+
+pred moveUp[player: Player] {
+    moveTo[player, next.(player.row), player.col]
+}
+
+pred moveDown[player : Player] {
+    moveTo[player, (player.row).next, player.col]
 }
 
 pred traces {

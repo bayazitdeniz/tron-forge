@@ -1,5 +1,6 @@
 #lang forge
 option problem_type temporal
+option max_tracelength 20
 
 abstract sig Idx {
     // right or below
@@ -44,9 +45,9 @@ pred moveTo[player: Player, nextRow: Idx, nextCol: Idx] {
     // postconditions
     // curr loc will be in walls
     Board.(walls') = Board.walls + (player.row->player.col)
-    // rowIdx change same column
-    player.(row') = nextRow
-    player.(col') = nextCol
+
+    row' = (row - player->Idx) + player->nextRow
+    col' = (row - player->Idx) + player->nextCol
 }
 
 pred moveUp[player: Player] {
@@ -57,11 +58,28 @@ pred moveDown[player : Player] {
     moveTo[player, (player.row).next, player.col]
 }
 
-pred traces {
-    initSmallRoom
-    moveUp[P2] until P2.row = I1
+pred moveLeft[player: Player] {
+    moveTo[player, player.row, next.(player.col)]
 }
 
-// run { indexConnect } //for exactly 2 Player
+pred moveRight[player : Player] {
+    moveTo[player, player.row, (player.col).next]
+}
+
+pred traces {
+    initSmallRoom
+    moveUp[P2]
+    after moveLeft[P2]
+    after after moveDown[P2]
+    after after after moveLeft[P2]
+    after after after after moveUp[P2]
+    after after after after after moveUp[P2]
+    after after after after after after {
+        moveRight[P2]
+        until no P2.col.next
+    }
+}
+
+// run { initSmallRoom } //for exactly 2 Player
 run { traces }
 

@@ -2,15 +2,13 @@
 option problem_type temporal
 option max_tracelength 20
 
-abstract sig Idx {
+sig Idx {
     // right or below
     next: lone Idx
 }
-one sig I1, I2, I3, I4, I5, I6, I7 extends Idx {}
-
-pred indexConnect {
-    next = I1->I2 + I2->I3 + I3->I4 + I4->I5 + I5->I6 + I6->I7
-}
+// minimum 2 Idx need to exist:
+// these help to describe the init without having an explicit instance
+one sig FirstIdx, LastIdx extends Idx {}
 
 abstract sig Player {
     var row: one Idx,
@@ -22,18 +20,15 @@ one sig Board {
     var walls: set Idx->Idx
 }
 
-pred initSmallRoom {
-    // NOTE: walls all around the board => handled in transition?
+pred initFirstAndLast {
     no walls
-
-    P1.row = I1
-    P1.col = I1
-
-    P2.row = I7
-    P2.col = I7
-
-    indexConnect
-}
+    --
+    P1.row = FirstIdx
+    P1.col = FirstIdx
+    --
+    P2.row = LastIdx
+    P2.col = LastIdx
+}   
 
 pred moveTo[player: Player, nextRow: Idx, nextCol: Idx] {
     // something above
@@ -66,8 +61,11 @@ pred moveRight[player : Player] {
     moveTo[player, player.row, (player.col).next]
 }
 
+pred winnerStutter {
+    // todo!
+}
+
 pred traces {
-    initSmallRoom
     moveUp[P2]
     after moveLeft[P2]
     after after moveDown[P2]
@@ -80,6 +78,12 @@ pred traces {
     }
 }
 
-// run { initSmallRoom } //for exactly 2 Player
-run { traces }
+inst sevenBySevenBoard {
+    Idx = I1 + I2 + I3 + I4 + I5 + I6 + I7
+    FirstIdx = I1
+    LastIdx = I7
+    next = I1->I2 + I2->I3 + I3->I4 + I4->I5 + I5->I6 + I6->I7
+}
 
+// run { initSmallRoom } //for exactly 2 Player
+run { initFirstAndLast and traces } for sevenBySevenBoard

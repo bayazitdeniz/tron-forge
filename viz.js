@@ -1,4 +1,4 @@
-const toNum = (idx) => +idx.id().slice(1, -1) - 1;
+const toNum = (idx) => +idx.id().slice(1).replace(/0$/, "") - 1;
 const unwrap = (reln) => reln.tuples()[0].atoms()[0];
 const getPos = (player) =>
   [row, col].map(player.join.bind(player)).map(unwrap).map(toNum);
@@ -6,6 +6,7 @@ const fillPos = ([row, col], value) => (board[row][col] = value);
 
 const indices = Idx.subSignatures()
   .map((idx) => idx.atoms()[0])
+  .concat(Idx.atoms())
   .sort((a, b) => toNum(a) - toNum(b));
 
 const board = Array(indices.length)
@@ -26,4 +27,3 @@ pre.textContent = [border, ...board.map((l) => `#${l.join("")}#`), border].join(
 div.innerHTML = "";
 div.append(pre);
 
-debugger;

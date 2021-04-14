@@ -122,46 +122,53 @@ inst threeByThreeEmptyBoard {
     next = I1->I2 + I2->I3
 }
 
-inst threeByThreeAlmostEndGame {
-    Board = Board0
-    Idx = I1 + I2 + I3
-    FirstIdx = I1
-    LastIdx = I3
-    next = I1->I2 + I2->I3
-    Player = P10 + P20
-    P1 = P10 
-    P2 = P20
-    --
-    walls = Board0->(I1->I1) + Board0->(I2->I1) + Board0->(I3->I1) + 
-            Board0->(I3->I3) + Board0->(I2->I3) + Board0->(I1->I3)
-    -- 
-    row = P10->I3 + P20->I1
-    col = P10->I2 + P20->I2
-}
-
-inst threeByThreeEndGame {
-    Board = Board0
-    Idx = I1 + I2 + I3
-    FirstIdx = I1
-    LastIdx = I3
-    next = I1->I2 + I2->I3
-    Player = P10 + P20
-    P1 = P10 
-    P2 = P20
-    --
-    walls = Board0->(I1->I1) + Board0->(I2->I1) + Board0->(I3->I1) + Board0->(I3->I2) +
-            Board0->(I3->I3) + Board0->(I2->I3) + Board0->(I1->I3) 
-    -- 
-    row = P10->I2 + P20->I1
-    col = P10->I2 + P20->I2
-}
-
 inst fourByFourEmptyBoard {
     Idx = I1 + I2 + I3 + I4
     FirstIdx = I1
     LastIdx = I4
     next = I1->I2 + I2->I3 + I3->I4
 }
+
+inst sevenBySevenEmptyBoard {
+    Idx = I1 + I2 + I3 + I4 + I5 + I6 + I7
+    FirstIdx = I1
+    LastIdx = I7
+    next = I1->I2 + I2->I3 + I3->I4 + I4->I5 + I5->I6 + I6->I7
+}
+
+// NOTE: cannot specify player location and walls in instance otherwise it doesn't var!
+
+// inst threeByThreeEndGame {
+//     Board = Board0
+//     Idx = I1 + I2 + I3
+//     FirstIdx = I1
+//     LastIdx = I3
+//     next = I1->I2 + I2->I3
+//     Player = P10 + P20
+//     P1 = P10 
+//     P2 = P20
+//     --
+//     Board0->(I1->I1) + Board0->(I2->I1) + Board0->(I3->I1) + Board0->(I3->I3) + Board0->(I2->I3) + Board0->(I1->I3) in walls
+//     -- 
+//     P10->I3 + P20->I1 in row
+//     P10->I2 + P20->I2 in col
+// }
+
+// inst threeByThreeAlmostEndGame {
+//     Board = Board0
+//     Idx = I1 + I2 + I3
+//     FirstIdx = I1
+//     LastIdx = I3
+//     next = I1->I2 + I2->I3
+//     Player = P10 + P20
+//     P1 = P10 
+//     P2 = P20
+//     --
+//     Board0->(I1->I1) + Board0->(I2->I1) + Board0->(I3->I1) + Board0->(I3->I2) + Board0->(I3->I3) + Board0->(I2->I3) + Board0->(I1->I3) in walls
+//     --
+//     P10->I2 + P20->I1 in row
+//     P10->I2 + P20->I2 in col
+// }
 
 // pred hardCodedSwitchForFour {
 //     Board.currPlayer = P1
@@ -180,30 +187,22 @@ inst fourByFourEmptyBoard {
 //     after after after after after after moveRight[P1]
 // }
 
-inst fourByFourPartFilledBoard {
-    Board = Board0
-    Idx = I1 + I2 + I3 + I4
-    FirstIdx = I1
-    LastIdx = I4
-    next = I1->I2 + I2->I3 + I3->I4
-    walls = Board0->(I1->I2) + Board0->(I3->I3)
-}
+// inst fourByFourPartFilledBoard {
+//     Board = Board0
+//     Idx = I1 + I2 + I3 + I4
+//     FirstIdx = I1
+//     LastIdx = I4
+//     next = I1->I2 + I2->I3 + I3->I4
+//     walls = Board0->(I1->I2) + Board0->(I3->I3)
+// }
 
-inst fiveByFiveFullyFilledBoard {
-    Board = Board0
-    Idx = I1 + I2 + I3 + I4 + I5
-    FirstIdx = I1
-    LastIdx = I5
-    next = I1->I2 + I2->I3 + I3->I4 + I4->I5
-    walls = Board0->(Idx->Idx) - Board0->(FirstIdx->FirstIdx) - Board0->(LastIdx->LastIdx)
-}
-
-inst sevenBySevenEmptyBoard {
-    Idx = I1 + I2 + I3 + I4 + I5 + I6 + I7
-    FirstIdx = I1
-    LastIdx = I7
-    next = I1->I2 + I2->I3 + I3->I4 + I4->I5 + I5->I6 + I6->I7
-}
+// inst fiveByFiveFullyFilledBoard {
+//     Board = Board0
+//     Idx = I1 + I2 + I3 + I4 + I5
+//     FirstIdx = I1
+//     LastIdx = I5
+//     next = I1->I2 + I2->I3 + I3->I4 + I4->I5
+// }
 
 ---------------------------------------------------------------------
 -- Initializations
@@ -227,34 +226,80 @@ pred p2First {
     Board.currPlayer = P2
 }
 
-// pred answer {
-//     Board.currPlayer = P1
-//     moveUp[P1]
-//     Board.currPlayer' = P2
-//     after (always loserStutter[P2])
-// }
-
 ---------------------------------------------------------------------
 -- Running Experiments
 ---------------------------------------------------------------------
 
-// Empty Board Runs
-run { p1First and initFirstAndLast and traces } for twoByTwoEmptyBoard
+-- Empty Board Runs
+// run { p1First and initFirstAndLast and traces } for twoByTwoEmptyBoard
 run { p1First and initFirstAndLast and traces } for threeByThreeEmptyBoard
-run { p1First and initFirstAndLast and traces } for fourByFourEmptyBoard
-run { p1First and initFirstAndLast and traces } for sevenBySevenEmptyBoard
+// run { p1First and initFirstAndLast and traces } for fourByFourEmptyBoard
+// run { p1First and initFirstAndLast and traces } for sevenBySevenEmptyBoard
 
+---------------------------------------------------------------------
+-- Basic Tests
+---------------------------------------------------------------------
+
+// TODO: turn all of the partly filled with walls instances into tests,
+//       the problem with partial maps is that if you specify walls 
+//       it will consider them as static throughout the trace!
+//       Why can't we put it in preds? Because we need the atoms specifying the Idx
+
+-- EndGame runs to debug transitions
 // run { p2First and traces } for threeByThreeEndGame
-
-// run { answer and traces } for threeByThreeAlmostEndGame
-
-// run {p1FirstP2Second} for threeByThreeAlmostEndGame
-
+// run { p1First and traces } for threeByThreeAlmostEndGame
+// run { p1First and traces } for threeByThreeAlmostEndGame2
 // run { hardCodedSwitch and initFirstAndLast and traces } for threeByThreeEmptyBoard
-
 // run { initFirstAndLast and traces } for fourByFourPartFilledBoard
-
 // run { initFirstAndLast and traces } for fiveByFiveFullyFilledBoard
+
+test expect {
+    // upAndDownTest: {
+	// 	some f1, f2, f3: Floor | {
+	// 		-- f1 is bottom floor, f3 is top floor
+	// 		above = f1->f2 + f2->f3
+	// 		floors
+
+	// 		-- first state
+	// 		Elevator.floor = f1
+	// 		Elevator.door = Closed
+
+	// 		-- second state
+	// 		Elevator.floor' = f2
+	// 		Elevator.door' = Closed
+
+	// 		-- third state
+	// 		Elevator.floor'' = f3
+	// 		Elevator.door'' = Closed
+
+	// 		-- fourth state
+	// 		Elevator.floor''' = f2
+	// 		Elevator.door''' = Closed
+
+	// 		-- fifth state
+	// 		Elevator.floor'''' = f1
+	// 		Elevator.door'''' = Closed
+
+	// 		-- transitions
+	// 		moveUp
+	// 		after moveUp
+	// 		after after moveDown
+	// 		after after after moveDown
+	// 	}
+	// } is sat
+
+    // leftAndRightTest: { 
+        
+    // } is sat
+}
+
+---------------------------------------------------------------------
+-- Verifications
+---------------------------------------------------------------------
+
+test expect {
+    vacuity: { p1First and initFirstAndLast and traces } is sat
+}
 
 ---------------------------------------------------------------------
 -- Future Work

@@ -240,6 +240,7 @@ run { p1First and initFirstAndLast and traces } for threeByThreeEmptyBoard
 -- Basic Tests
 ---------------------------------------------------------------------
 
+
 // TODO: turn all of the partly filled with walls instances into tests,
 //       the problem with partial maps is that if you specify walls 
 //       it will consider them as static throughout the trace!
@@ -254,43 +255,110 @@ run { p1First and initFirstAndLast and traces } for threeByThreeEmptyBoard
 // run { initFirstAndLast and traces } for fiveByFiveFullyFilledBoard
 
 test expect {
-    // upAndDownTest: {
-	// 	some f1, f2, f3: Floor | {
-	// 		-- f1 is bottom floor, f3 is top floor
-	// 		above = f1->f2 + f2->f3
-	// 		floors
+    upAndDownTest: {
+		some I1, I2, I3: Idx | {
+            next = I1->I2 + I2->I3
+            no walls
 
-	// 		-- first state
-	// 		Elevator.floor = f1
-	// 		Elevator.door = Closed
+			-- first state
+			Player.row = I1
+            Player.col = I1
 
-	// 		-- second state
-	// 		Elevator.floor' = f2
-	// 		Elevator.door' = Closed
+			-- second state
+			Player.row' = I2
+			Player.col' = I1
 
-	// 		-- third state
-	// 		Elevator.floor'' = f3
-	// 		Elevator.door'' = Closed
+			-- third state
+			Player.row'' = I3
+			Player.col'' = I1
 
-	// 		-- fourth state
-	// 		Elevator.floor''' = f2
-	// 		Elevator.door''' = Closed
+			-- fourth state
+			Player.row''' = I2
+			Player.col''' = I1
 
-	// 		-- fifth state
-	// 		Elevator.floor'''' = f1
-	// 		Elevator.door'''' = Closed
+			-- transitions
+			moveDown[Player]
+			after moveDown[Player]
+			//after after moveUp[Player] -- erroring on moveUp
+		}
+	} is sat
 
-	// 		-- transitions
-	// 		moveUp
-	// 		after moveUp
-	// 		after after moveDown
-	// 		after after after moveDown
-	// 	}
-	// } is sat
+    leftAndRightTest: { 
+        some I1, I2, I3: Idx | {
+            next = I1->I2 + I2->I3
+            no walls
 
-    // leftAndRightTest: { 
+			-- first state
+			Player.row = I1
+            Player.col = I1
+
+			-- second state
+			Player.row' = I1
+			Player.col' = I2
+
+			-- third state
+			Player.row'' = I1
+			Player.col'' = I3
+
+			-- fourth state
+			Player.row''' = I1
+			Player.col''' = I2
+
+			-- transitions
+			moveRight[Player]
+			after moveRight[Player]
+			//after after moveLeft[Player] -- erroring when moving left
+        }
         
-    // } is sat
+    } is sat
+
+    upTest: {
+		some I1, I2, I3: Idx | {
+            next = I1->I2 + I2->I3
+            no walls
+
+			-- first state
+			Player.row = I3
+            Player.col = I3
+
+			-- second state
+			Player.row' = I2
+			Player.col' = I3
+
+			-- third state
+			Player.row'' = I1
+			Player.col'' = I3
+
+			-- transitions
+			moveUp[Player]
+			after moveUp[Player]
+
+		}
+	} is sat
+
+     leftTest: {
+		some I1, I2, I3: Idx | {
+            next = I1->I2 + I2->I3
+            no walls
+
+			-- first state
+			Player.row = I3
+            Player.col = I3
+
+			-- second state
+			Player.row' = I3
+			Player.col' = I2
+
+			-- third state
+			Player.row'' = I3
+			Player.col'' = I1
+
+			-- transitions
+			moveLeft[Player]
+			after moveLeft[Player]
+
+		}
+	} is sat
 }
 
 ---------------------------------------------------------------------

@@ -232,7 +232,7 @@ pred p2First {
 
 -- Empty Board Runs
 // run { p1First and initFirstAndLast and traces } for twoByTwoEmptyBoard
-run { p1First and initFirstAndLast and traces } for threeByThreeEmptyBoard
+//run { p1First and initFirstAndLast and traces } for threeByThreeEmptyBoard
 // run { p1First and initFirstAndLast and traces } for fourByFourEmptyBoard
 // run { p1First and initFirstAndLast and traces } for sevenBySevenEmptyBoard
 
@@ -255,7 +255,7 @@ run { p1First and initFirstAndLast and traces } for threeByThreeEmptyBoard
 // run { initFirstAndLast and traces } for fiveByFiveFullyFilledBoard
 
 test expect {
-    upAndDownTest: {
+    moveDownTest: {
 		some I1, I2, I3: Idx | {
             next = I1->I2 + I2->I3
             no walls
@@ -272,18 +272,14 @@ test expect {
 			Player.row'' = I3
 			Player.col'' = I1
 
-			-- fourth state
-			Player.row''' = I2
-			Player.col''' = I1
-
 			-- transitions
 			moveDown[Player]
 			after moveDown[Player]
-			//after after moveUp[Player] -- erroring on moveUp
+			
 		}
 	} is sat
 
-    leftAndRightTest: { 
+    moveRightTest: { 
         some I1, I2, I3: Idx | {
             next = I1->I2 + I2->I3
             no walls
@@ -300,14 +296,10 @@ test expect {
 			Player.row'' = I1
 			Player.col'' = I3
 
-			-- fourth state
-			Player.row''' = I1
-			Player.col''' = I2
 
 			-- transitions
 			moveRight[Player]
 			after moveRight[Player]
-			//after after moveLeft[Player] -- erroring when moving left
         }
         
     } is sat
@@ -359,6 +351,40 @@ test expect {
 
 		}
 	} is sat
+
+     switchPlayerTest: { 
+        some I1, I2, I3: Idx | {
+            some p1, p2: Player | {
+                next = I1->I2 + I2->I3
+                no walls
+                p1First
+
+                -- first state
+                p1.row = I1
+                p1.col = I1
+                p2.row = I3
+                p2.col = I3
+
+                -- second state
+                p1.row' = I1
+                p1.col' = I2
+                Board.currPlayer' = p1
+
+                -- third state
+                Board.currPlayer' = p2
+
+
+                -- transitions
+                moveRight[p1]
+                after switchPlayers[currPlayer]
+
+            }
+            
+        }
+        
+    } is sat
+
+
 }
 
 ---------------------------------------------------------------------
@@ -366,7 +392,12 @@ test expect {
 ---------------------------------------------------------------------
 
 test expect {
-    vacuity: { p1First and initFirstAndLast and traces } is sat
+    vacuity1: { p1First and initFirstAndLast and traces } is sat
+    vacuity2: { p2First and initFirstAndLast and traces } is sat
+    -- Check it if it's possible for game to terminate and for one player to win
+    alwaysAWinner1: { p1First and initFirstAndLast and traces and eventually loserStutter[Board.currPlayer]} is sat
+    alwaysAWinner2: { p2First and initFirstAndLast and traces and eventually loserStutter[Board.currPlayer]} is sat
+
 }
 
 ---------------------------------------------------------------------

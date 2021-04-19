@@ -219,7 +219,7 @@ pred p2LosesLater {
 -- EndGame or Partial Boards runs to debug transitions
 // run { p2First and traces } for threeByThreeEndGame
 // run { p1First and traces } for threeByThreeAlmostEndGame
-run { p1First and initFirstAndLastSomeWalls and traces and p2LosesLater } for fourByFourPartFilledBoard
+// run { p1First and initFirstAndLastSomeWalls and traces and p2LosesLater } for fourByFourPartFilledBoard
 
 ---------------------------------------------------------------------
 -- Basic Tests
@@ -388,7 +388,7 @@ test expect {
     aWinner1: { p1First and initFirstAndLast and traces and eventually loserStutter[Board.currPlayer]} is sat
     aWinner2: { p2First and initFirstAndLast and traces and eventually loserStutter[Board.currPlayer]} is sat
     -- Stronger verification: guarantee that someone will always lose / within the limits of a threeByThreeBoard
-    alwaysSomeLoser: { (p1First and initFirstAndLast and traces) implies (eventually (some p: Player | loserStutter[Board.currPlayer]))} for threeByThreeEmptyBoard is theorem
+    alwaysSomeLoser: { (p1First and initFirstAndLast and traces) implies (eventually (some p: Player | loserStutter[p]))} for threeByThreeEmptyBoard is theorem
     -- Check if board ever changes or anything non-valid happens with transitions
     alwaysValidBoard1: {(p1First and initFirstAndLast and traces) implies (always validBoard)} for threeByThreeEmptyBoard is theorem
     alwaysValidBoard2: {(p2First and initFirstAndLast and traces) implies (always validBoard)} for twoByTwoEmptyBoard is theorem

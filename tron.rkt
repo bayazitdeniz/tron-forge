@@ -227,153 +227,290 @@ pred p2LosesLater {
 option verbose 0
 
 test expect {
-    moveDownTest: {
-		some I1, I2, I3: Idx | {
-            next = I1->I2 + I2->I3
-            no walls
+    moveUpTest: {
+        some p: Player | {
+            some I1, I2, I3: Idx | {
+                next = I1->I2 + I2->I3
+                validBoard
 
-			-- first state
-			Player.row = I1
-            Player.col = I1
+                -- first state
+                p.row = I3
+                p.col = I3
+                no walls
 
-			-- second state
-			Player.row' = I2
-			Player.col' = I1
+                -- second state
+                p.row' = I2
+                p.col' = I3
+                Board.walls' = I3->I3
 
-			-- third state
-			Player.row'' = I3
-			Player.col'' = I1
+                -- third state
+                p.row'' = I1
+                p.col'' = I3
+                Board.walls'' = I3->I3 + I2->I3
 
-			-- transitions
-			moveDown[Player]
-			after moveDown[Player]
-			
-		}
+                -- transitions
+                moveUp[p]
+                after moveUp[p]
+            }
+        }
 	} is sat
 
-    moveRightTest: { 
-        some I1, I2, I3: Idx | {
-            next = I1->I2 + I2->I3
-            no walls
+    noWallMoveUpTest: {
+        some p: Player | {
+            some I1, I2, I3: Idx | {
+                next = I1->I2 + I2->I3
+                validBoard
 
-			-- first state
-			Player.row = I1
-            Player.col = I1
+                -- first state
+                p.row = I3
+                p.col = I3
+                no walls
 
-			-- second state
-			Player.row' = I1
-			Player.col' = I2
+                -- second state
+                p.row' = I2
+                p.col' = I3
+                no walls'
 
-			-- third state
-			Player.row'' = I1
-			Player.col'' = I3
-
-
-			-- transitions
-			moveRight[Player]
-			after moveRight[Player]
+                -- transitions
+                moveUp[p]
+            }
         }
-        
+	} is unsat
+
+    moveDownTest: {
+        some p: Player | {
+            some I1, I2, I3: Idx | {
+                next = I1->I2 + I2->I3
+                validBoard
+
+                -- first state
+                p.row = I1
+                p.col = I1
+                no walls
+
+                -- second state
+                p.row' = I2
+                p.col' = I1
+                Board.walls' = I1->I1
+
+                -- third state
+                p.row'' = I3
+                p.col'' = I1
+                Board.walls'' = I1->I1 + I2->I1
+
+                -- transitions
+                moveDown[p]
+                after moveDown[p]
+            }
+        }
+	} is sat
+
+    incorrectWallMoveDownTest: {
+        some p: Player | {
+            some I1, I2, I3: Idx | {
+                next = I1->I2 + I2->I3
+                validBoard
+
+                -- first state
+                p.row = I1
+                p.col = I1
+                no walls
+
+                -- second state
+                p.row' = I2
+                p.col' = I1
+                Board.walls' = I2->I2
+
+                -- transitions
+                moveDown[p]
+            }
+        }
+	} is unsat
+
+    moveLeftTest: {
+        some p: Player | {
+            some I1, I2, I3: Idx | {
+                next = I1->I2 + I2->I3
+                validBoard
+
+                -- first state
+                p.row = I3
+                p.col = I3
+                no walls
+
+                -- second state
+                p.row' = I3
+                p.col' = I2
+                Board.walls' = I3->I3
+
+                -- third state
+                p.row'' = I3
+                p.col'' = I1
+                Board.walls'' = I3->I3 + I3->I2
+
+                -- transitions
+                moveLeft[p]
+                after moveLeft[p]
+            }
+        }
+	} is sat
+
+    noWallMoveLeftTest: {
+        some p: Player | {
+            some I1, I2, I3: Idx | {
+                next = I1->I2 + I2->I3
+                validBoard
+
+                -- first state
+                p.row = I3
+                p.col = I3
+                no walls
+
+                -- second state
+                p.row' = I3
+                p.col' = I2
+                no walls'
+
+                -- transitions
+                moveLeft[p]
+            }
+        }
+	} is unsat
+
+    moveRightTest: {
+        some p : Player | {
+            some I1, I2, I3: Idx | {
+                next = I1->I2 + I2->I3
+                validBoard
+
+                -- first state
+                p.row = I1
+                p.col = I1
+                no walls
+
+                -- second state
+                p.row' = I1
+                p.col' = I2
+                Board.walls' = I1->I1
+
+                -- third state
+                p.row'' = I1
+                p.col'' = I3
+                Board.walls'' = I1->I1 + I1->I2
+
+                -- transitions
+                moveRight[p]
+                after moveRight[p]
+            }
+        }
     } is sat
 
-    upTest: {
-		some I1, I2, I3: Idx | {
-            next = I1->I2 + I2->I3
-            no walls
-
-			-- first state
-			Player.row = I3
-            Player.col = I3
-
-			-- second state
-			Player.row' = I2
-			Player.col' = I3
-
-			-- third state
-			Player.row'' = I1
-			Player.col'' = I3
-
-			-- transitions
-			moveUp[Player]
-			after moveUp[Player]
-
-		}
-	} is sat
-
-     leftTest: {
-		some I1, I2, I3: Idx | {
-            next = I1->I2 + I2->I3
-            no walls
-
-			-- first state
-			Player.row = I3
-            Player.col = I3
-
-			-- second state
-			Player.row' = I3
-			Player.col' = I2
-
-			-- third state
-			Player.row'' = I3
-			Player.col'' = I1
-
-			-- transitions
-			moveLeft[Player]
-			after moveLeft[Player]
-
-		}
-	} is sat
-
-     switchPlayerTest: { 
-        some I1, I2, I3: Idx | {
-            some p1, p2: Player | {
+    incorrectWallMoveRightTest: {
+        some p : Player | {
+            some I1, I2, I3: Idx | {
                 next = I1->I2 + I2->I3
+                validBoard
+
+                -- first state
+                p.row = I1
+                p.col = I1
                 no walls
+
+                -- second state
+                p.row' = I1
+                p.col' = I2
+                Board.walls' = I3->I3
+                I1->I1 not in Board.walls'
+
+                -- transitions
+                moveRight[p]
+            }
+        }
+    } is unsat
+
+    switchPlayerTest: { 
+        some I1, I2, I3: Idx | {
+            next = I1->I2 + I2->I3
+            no walls
+            validBoard
+            p1First
+
+            -- first state
+            P1.row = I1
+            P1.col = I1
+            P2.row = I3
+            P2.col = I3
+            Board.currPlayer = P1
+
+            -- second state
+            P1.row' = I1
+            P1.col' = I2
+            P2.row' = I3
+            P2.col' = I3
+            Board.currPlayer' = P2
+
+            -- third state
+            P1.row'' = I1
+            P1.col'' = I2
+            P2.row'' = I2
+            P2.col'' = I3
+            Board.currPlayer'' = P2
+
+            -- transitions
+            moveRight[P1]
+            switchPlayers[currPlayer]
+            after moveUp[P2]
+            not switchPlayers[currPlayer']
+        }
+    } is sat
+
+    endTest: { 
+        // a two by two board game example where the starting player loses.
+        some I1, I2: Idx | {
+                next = I1->I2
+                no walls
+                validBoard
                 p1First
 
                 -- first state
-                p1.row = I1
-                p1.col = I1
-                p2.row = I3
-                p2.col = I3
+                P1.row = I1
+                P1.col = I1
+                P2.row = I2
+                P2.col = I2
+                Board.currPlayer = P1
 
                 -- second state
-                p1.row' = I1
-                p1.col' = I2
-                Board.currPlayer' = p1
+                P1.row' = I2
+                P1.col' = I1
+                P2.row' = I2
+                P2.col' = I2
+                Board.currPlayer' = P2
 
                 -- third state
-                Board.currPlayer' = p2
+                P1.row'' = I2
+                P1.col'' = I1
+                P2.row'' = I1
+                P2.col'' = I2
+                Board.currPlayer'' = P1
 
+                -- fourth state
+                P1.row''' = I2
+                P1.col''' = I1
+                P2.row''' = I1
+                P2.col''' = I2
+                Board.currPlayer''' = P1
 
                 -- transitions
-                moveRight[p1]
-                after switchPlayers[currPlayer]
-
-            }
-            
+                moveDown[P1]
+                switchPlayers[currPlayer]
+                after moveUp[P2]
+                switchPlayers[currPlayer']
+                after after loserStutter[P1]
+                after after loserStutter[P2]
+                not switchPlayers[currPlayer'']
         }
-        
     } is sat
-
 }
-
-// pred hardCodedSwitchForFour {
-//     Board.currPlayer = P1
-//     moveDown[P1]
-//     Board.(currPlayer') = P2
-//     after moveUp[P2]
-//     Board.(currPlayer'') = P1
-//     after after moveDown[P1]
-//     Board.(currPlayer''') = P2
-//     after after after moveUp[P2]
-//     Board.(currPlayer'''') = P1
-//     after after after after moveDown[P1]
-//     Board.(currPlayer''''') = P2
-//     after after after after after moveUp[P2]
-//     Board.(currPlayer'''''') = P1
-//     after after after after after after moveRight[P1]
-// }
 
 ---------------------------------------------------------------------
 -- Verifications

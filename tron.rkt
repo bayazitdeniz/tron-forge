@@ -382,8 +382,12 @@ test expect {
 test expect {
     vacuity1: { p1First and initFirstAndLast and traces } is sat
     vacuity2: { p2First and initFirstAndLast and traces } is sat
-    -- Check it if it's possible for game to terminate and for one player to win
-    alwaysAWinner1: { p1First and initFirstAndLast and traces and eventually loserStutter[Board.currPlayer]} is sat
-    alwaysAWinner2: { p2First and initFirstAndLast and traces and eventually loserStutter[Board.currPlayer]} is sat
-
+    -- Check it if it's possible for game to terminate and for the starting player to lose/the other to win
+    aWinner1: { p1First and initFirstAndLast and traces and eventually loserStutter[Board.currPlayer]} is sat
+    aWinner2: { p2First and initFirstAndLast and traces and eventually loserStutter[Board.currPlayer]} is sat
+    -- Stronger verification: guarantee that someone will always lose / within the limits of a threeByThreeBoard
+    alwaysSomeLoser: { (p1First and initFirstAndLast and traces) implies (eventually (some p: Player | loserStutter[Board.currPlayer]))} for threeByThreeEmptyBoard is theorem
+    -- Check if board ever changes or anything non-valid happens with transitions
+    alwaysValidBoard: {(p1First and initFirstAndLast and traces) implies (always validBoard)} for threeByThreeEmptyBoard is theorem
+    alwaysValidBoard: {(p2First and initFirstAndLast and traces) implies (always validBoard)} for twoByTwoEmptyBoard is theorem
 }

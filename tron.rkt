@@ -378,6 +378,8 @@ test expect {
 ---------------------------------------------------------------------
 -- Verifications
 ---------------------------------------------------------------------
+// Note: Verifying theorems with a board that is larger than three by three is VERY slow.
+//       We advise not to do so and verify theorems with a three by three board or a larger board with many walls.
 
 test expect {
     vacuity1: { p1First and initFirstAndLast and traces } is sat
@@ -388,6 +390,6 @@ test expect {
     -- Stronger verification: guarantee that someone will always lose / within the limits of a threeByThreeBoard
     alwaysSomeLoser: { (p1First and initFirstAndLast and traces) implies (eventually (some p: Player | loserStutter[Board.currPlayer]))} for threeByThreeEmptyBoard is theorem
     -- Check if board ever changes or anything non-valid happens with transitions
-    alwaysValidBoard: {(p1First and initFirstAndLast and traces) implies (always validBoard)} for threeByThreeEmptyBoard is theorem
-    alwaysValidBoard: {(p2First and initFirstAndLast and traces) implies (always validBoard)} for twoByTwoEmptyBoard is theorem
+    alwaysValidBoard1: {(p1First and initFirstAndLast and traces) implies (always validBoard)} for threeByThreeEmptyBoard is theorem
+    alwaysValidBoard2: {(p2First and initFirstAndLast and traces) implies (always validBoard)} for twoByTwoEmptyBoard is theorem
 }

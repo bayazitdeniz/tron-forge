@@ -53,7 +53,7 @@ We limited the scope to mainly 3x3 and 4x4 boards. We found that verifying large
 
 ## Tradeoffs
 *What tradeoffs did you make in choosing your representation? What else did you try that didn’t work as well?*
-
+- We did a lot of maneuvering around of variables when defining the Sigs of the game representation. We ultimately found that the Board keeping track of walls and the current Player while the Player itself keeps track of its current position would allow us the greatest ease and flexbility in defining our predicates. 
 
 ## Change in Goals
 *Did your goals change at all from your proposal? Did you realize anything you planned was unrealistic, or that anything you thought was unrealistic was doable?*

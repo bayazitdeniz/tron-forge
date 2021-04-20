@@ -1,14 +1,11 @@
 # tron-forge
 An implementation of the Tron game in Forge.
 
-**Prompt: You should write a one page README describing how you structured your model and what your model proved. You can assume that anyone reading it will be familiar with your project proposal.**
-
 ## Game Description
 We built a basic version of the Tron game from CS1410's final project (http://cs.brown.edu/courses/csci1410/assignments/tron.pdf). Quoting from that assignment spec: Tron-141 is a two-player, alternating-move, zero-sum game played on a walled-in rectangular grid (i.e., the board), in which players take turns moving straight ahead, left, or right, leaving behind an impenetrable barrier. A player loses by colliding with a barrier or a wall.
 We chose Tron because it has an interesting visualization component, and we feel that it would be possible to model in Forge (for small boards, at least).
 
 ## Model Design Choices
-
 
 ### Sigs:
 - **Idx**: Represents the indices and locations of the board. ex) In a 3x3 board, I1 -> I1 is the top left corner while I3 -> I3 is the bottom right corner.

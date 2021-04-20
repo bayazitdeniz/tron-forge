@@ -48,7 +48,7 @@ We chose Tron because it has an interesting visualization component, and we feel
 
 ## Assumptions
 *What assumptions did you make about scope? What are the limits of your model?*
-We limited the scope to mainly 3x3 and 4x4 boards. We found that verifying largers boards is extremely slow and thus our model cannot accurately depict a more realistic version of the Tron game where the boards give the players more area and options to move. Additionally, we narrowed the scope of the game to one without powerups. 
+- We limited the scope to mainly 3x3 and 4x4 boards. We found that verifying largers boards is extremely slow and thus our model cannot accurately depict a more realistic version of the Tron game where the boards give the players more area and options to move. Additionally, we narrowed the scope of the game to one without powerups. 
 
 
 ## Tradeoffs
@@ -58,4 +58,4 @@ We limited the scope to mainly 3x3 and 4x4 boards. We found that verifying large
 ## Change in Goals
 *Did your goals change at all from your proposal? Did you realize anything you planned was unrealistic, or that anything you thought was unrealistic was doable?*
 
-We achieved what we layed out in the foundation of our proposal. However, we did not have enough time to implement the powerups and we were also limited to small boards because larger boards would take too much time to verify and run on Forge.
+- We achieved what we layed out in the foundation of our proposal. However, we did not have enough time to implement the powerups and we were also limited to small boards because larger boards would take too much time to verify and run on Forge.

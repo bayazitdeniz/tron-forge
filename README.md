@@ -2,8 +2,7 @@
 An implementation of the Tron game in Forge.
 
 ## Game Description
-We built a basic version of the Tron game from CS1410's final project (http://cs.brown.edu/courses/csci1410/assignments/tron.pdf). Quoting from that assignment spec: Tron-141 is a two-player, alternating-move, zero-sum game played on a walled-in rectangular grid (i.e., the board), in which players take turns moving straight ahead, left, or right, leaving behind an impenetrable barrier. A player loses by colliding with a barrier or a wall.
-We chose Tron because it has an interesting visualization component, and we feel that it would be possible to model in Forge (for small boards, at least).
+We built a basic version of the Tron game from [CS1410's final project](http://cs.brown.edu/courses/csci1410/assignments/tron.pdf). Quoting from that assignment spec: Tron-141 is a two-player, alternating-move, zero-sum game played on a walled-in rectangular grid (i.e., the board), in which players take turns moving straight ahead, left, or right, leaving behind an impenetrable barrier. A player loses by colliding with a barrier or a wall. We chose Tron because it has an interesting visualization component, and was that possible to model in Forge (verifications can only be done for small boards like 3 by 3 boards, whereas visualizations can go up to larger boards).
 
 ## Model Design Choices
 
@@ -41,7 +40,11 @@ We chose Tron because it has an interesting visualization component, and we feel
 
 ## Visualization Description
 *How should we understand an instance of your model and what your custom visualization shows?*
+- The electrum framework allows us to model a trace of transitions between different states that at a certain point in time link by a loop. These transitions are between boards with valid moves (which is depicted by the moveTo/moveUp/moveDown/moveLeft/moveRight predicates included in the traces transitions).
 
+- **left side**: the left side of our visualization shows a point in the trace (the loop buttons in the left panel can help you navigate through them). The visualization requires a validBoard (guaranteed by the validBoard predicate on the start state in traces) so visualizations that might not be clear to the user are: players on the same place as other players, players on walls etc.
+
+- **right side**: the right side of our visualization shows the last state of the board meaning when a player is losing (a losingStutter[currPlayer] state). This allows the user to understand the outcome of the trace without having to click forward many times.
 
 ## Assumptions
 *What assumptions did you make about scope? What are the limits of your model?*
